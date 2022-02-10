@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import './Timer.css';
 
+let ticker;
 function Timer() {
+  console.log('does it come back here????')
   let sessionLength = 25
   const sessionIncrement = () => {
     sessionLength++;
@@ -19,7 +21,6 @@ document.getElementById('session-label').innerHTML = `Session length: ${sessionL
      document.getElementById(
        "break-label"
      ).innerHTML = `Break length: ${breakLength}`;
-
   };
 
    const breakDecrement = () => {
@@ -28,24 +29,38 @@ document.getElementById('session-label').innerHTML = `Session length: ${sessionL
        "break-label"
      ).innerHTML = `Break length: ${breakLength}`;
    };
+ 
 
-  const [minutes, setMinutes] = useState('25')
-  const [seconds, setSeconds] = useState('0')
-  let ticker; 
+  const seconds = 1;
+  const [isoSeconds, setIsoSeconds] = useState(1500);
+  let time = new Date(seconds * 1000 * isoSeconds).toISOString().substring(14, 19);
+  const [isActive, setActivity] = useState(false);
 
-  const timerStarter = () => {
-document.getElementById("seconds-left").innerHTML = seconds;
-ticker = setInterval(() => {
-  setSeconds((previousSecs) => {return previousSecs - 1})
-}, 1000)
+ 
 
-  }
+   function timerStarter() {
+        if (isActive === false) {
+       setActivity(true);
+    
+    ticker = setInterval(decreaseSecond, 1000);
 
-  const reset = () => {
-    clearInterval(ticker)
-document.getElementById("break-length").innerHTML = 5;
-document.getElementById("session-length").innerHTML = `${minutes}:${seconds}`;
+  }else {clearInterval(ticker);
+    ticker = null;
+  setActivity(false)}
 
+   }
+
+   function decreaseSecond() {
+        setIsoSeconds((previousSecs) => {
+          // values are not changing here!!
+          return previousSecs - 1;
+        });
+    }
+
+  function reset() {
+    //console.log('this is passed to clearInterval after pressing reset: ', ticker)
+    
+document.getElementById("break-length").innerHTML = 'reseted';
 
   }
 
@@ -69,13 +84,12 @@ document.getElementById("session-length").innerHTML = `${minutes}:${seconds}`;
       <div id="session-length">{sessionLength}</div>
       <div id="timer-label">Session</div>
       <div id="time-left">
-        <span id="minutes-left">{minutes}</span>:
-        <span id="seconds-left">{seconds}</span>
+  {time}
       </div>
-      <button id="start_stop" onClick={() => timerStarter()}>
+      <button id="start_stop" onClick={timerStarter}>
         Start / Pause
       </button>
-      <button id="reset" onClick={() => reset()}>
+      <button id="reset" onClick={reset}>
         Reset
       </button>
     </>

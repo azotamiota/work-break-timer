@@ -5,9 +5,9 @@ import Timer from './Timer';
 
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Timer />
-  </React.StrictMode>,
+ // <React.StrictMode>
+    <Timer />,
+ // </React.StrictMode>,
   document.getElementById('root')
 );
 
