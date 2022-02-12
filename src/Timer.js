@@ -1,55 +1,50 @@
 import { useState } from 'react';
 import './Timer.css';
 
-let sessionLength = 25;
+let defaultSessionLength = 25;
+let breakLength = 5;
 let ticker;
 function Timer() {
-  const [isoSeconds, setIsoSeconds] = useState(sessionLength * 60);
-  let time = new Date(sessionLength * 60 * 1000).toISOString().substring(14, 19);
+  const defaultIsoSeconds = defaultSessionLength * 60;
+  const [isoSeconds, setIsoSeconds] = useState(defaultIsoSeconds);
+  let countingTime = new Date(isoSeconds * 1000).toISOString().substring(14, 19);
 
     const sessionIncrement = () => {
-    sessionLength += 1;
-      let updatedTime = new Date(sessionLength * 60 * 1000)
-        .toISOString()
-        .substring(14, 19);
-      document.getElementById(
-        "session-label"
-      ).innerHTML = `Session length: ${updatedTime}`;
-    document.getElementById("time-left").innerHTML = updatedTime;
-    }
+      if (isActive === false) {
+        if (defaultSessionLength <= 59) {
+          defaultSessionLength++;
+          setIsoSeconds(defaultIsoSeconds + 60);
+        }
+        }
+    };
   
   const sessionDecrement = () => {
-    sessionLength -= 1;
-    let updatedTime = new Date(sessionLength * 60 * 1000)
-      .toISOString()
-      .substring(14, 19);
-    document.getElementById(
-      "session-label"
-    ).innerHTML = `Session length: ${updatedTime}`;
-    document.getElementById("time-left").innerHTML = updatedTime;
+    if (isActive === false) {
+      if (defaultSessionLength >= 2) {
+     defaultSessionLength--;
+        setIsoSeconds(defaultIsoSeconds - 60);
+      }
+    }
   };
-  
 
   const [isActive, setActivity] = useState(false);
+  //useEffect(() => {setActivity(true)}, []);
+
   function timerStarter() {
-       if (isActive === false) {
-      setActivity(true);
-       ticker = setInterval(setIsoSeconds((previousSecs) => {
-          return previousSecs - 1;
-        }), 1000);
-  
-       }else {clearInterval(ticker);
-       ticker = null;
-        setActivity(false)}
-  
-  }
+    
+      if (isActive === false) {
+        ticker = setInterval(secondDecreaser, 1000);
+        setActivity(true);
+      } else {
+        clearInterval(ticker);
+        ticker = null;
+        setActivity(false);
+      }        
+        function secondDecreaser() {
+          setIsoSeconds(previousSecs => previousSecs - 1)
+        }
+      }
 
-//  let sessionLength = new Date(userSetIsoSecondsSession * 1000)
-//    .toISOString()
-//    .substring(14, 19);
-
-
-  let breakLength = 5;
   const breakIncrement = () => {
      breakLength++;
      document.getElementById(
@@ -64,22 +59,19 @@ function Timer() {
      ).innerHTML = `Break length: ${breakLength}`;
    };
  
-
-   
-
   function reset() {
-    //console.log('this is passed to clearInterval after pressing reset: ', ticker)
-    setIsoSeconds(sessionLength * 60);
     clearInterval(ticker);
     ticker = null;
-document.getElementById("break-length").innerHTML = 'reseted';
-
+    defaultSessionLength = 25;
+    console.log(defaultSessionLength * 60);
+    setActivity(false)
+    setIsoSeconds(defaultSessionLength * 60);
   }
 
   return (
     <>
       <div id="break-label">Break label: {breakLength}</div>
-      <div id="session-label">Session length: {time}</div>
+      <div id="session-label">Session length: {defaultSessionLength}</div>
       <button id="break-decrement" onClick={() => breakDecrement()}>
         Decrease break time
       </button>
@@ -93,10 +85,10 @@ document.getElementById("break-length").innerHTML = 'reseted';
         Increase session time
       </button>
       <div id="break-length">5</div>
-      {/* <div id="session-length">{sessionLength}</div> */}
+      {/* <div id="session-length">{SessionLength}</div> */}
       <div id="timer-label">Session</div>
       <div id="time-left">
-        {time}
+        {countingTime}
       </div>
       <button id="start_stop" onClick={timerStarter}>
         Start / Pause
