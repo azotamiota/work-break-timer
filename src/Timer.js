@@ -1,89 +1,126 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './Timer.css';
 
 let defaultSessionLength = 25;
-let breakLength = 5;
+let defaultBreakLength = 5;
 let ticker;
 function Timer() {
+  const [panelLabel, setPanelLabel] = useState('Session')
   const sessionSeconds = defaultSessionLength * 60;
-  const [isActive, setActivity] = useState(false);
-  const [seconds, setSessionSeconds] = useState(sessionSeconds);
+  const breakSeconds = defaultBreakLength * 60
+  const [isSessionRound, setSessionRound] = useState(true)
+  const [isCountdownActive, setCountdownActivity] = useState(false);
+  const [leftSeconds, setLeftSeconds] = useState(sessionSeconds);
 
   let clockStyle = () => {
-    let displayMinutes = Math.floor(seconds / 60)
-    let displaySeconds= seconds - displayMinutes * 60
-    displayMinutes = displayMinutes < 10
-      ? (displayMinutes = "0" + displayMinutes)
-      : displayMinutes;
-    displaySeconds = displaySeconds < 10
-      ? (displaySeconds = "0" + displaySeconds)
-      : displaySeconds;
-    return displayMinutes + ':' + displaySeconds;
+      let displayMinutes = Math.floor(leftSeconds / 60);
+      let displaySeconds = leftSeconds - displayMinutes * 60;
+      displayMinutes =
+        displayMinutes < 10
+          ? (displayMinutes = "0" + displayMinutes)
+          : displayMinutes;
+      displaySeconds =
+        displaySeconds < 10
+          ? (displaySeconds = "0" + displaySeconds)
+          : displaySeconds;
+      return displayMinutes + ":" + displaySeconds;
+    
   }
   
   
   const sessionIncrement = () => {
-      if (isActive === false) {
+      if (isCountdownActive === false) {
         if (sessionSeconds < 3600) {
           defaultSessionLength++;
-          setSessionSeconds(sessionSeconds + 60);
+          setLeftSeconds(sessionSeconds + 60);
         }
         }
     };
   
-  const sessionDecrement = () => {
-    if (isActive === false) {
-      if (sessionSeconds > 60) {
-        defaultSessionLength--;       
-        setSessionSeconds(sessionSeconds - 60);
+    const sessionDecrement = () => {
+      if (isCountdownActive === false) {
+        if (sessionSeconds > 60) {
+          defaultSessionLength--;       
+          setLeftSeconds(sessionSeconds - 60);
+        }
       }
-    }
-  };
-
-  function timerStarter() {
+    };
+    const breakIncrement = () => {
+        if (isCountdownActive === false) {
+          if (defaultBreakLength < 60) {
+            defaultBreakLength++;
+            document.getElementById("break-length").innerHTML =
+              defaultBreakLength;
+          }
+        }
+    };
+     const breakDecrement = () => {
+       if (isCountdownActive === false) {
+         if (defaultBreakLength > 1) {
+          defaultBreakLength--;
+          document.getElementById("break-length").innerHTML =
+            defaultBreakLength;
+         }
+       }
+     };
     
-      if (isActive === false) {
-        ticker = setInterval(secondDecreaser, 1000);
-        setActivity(true);
+  function timerToggle() {
+      if (isCountdownActive === false) {
+        ticker = setInterval(secondDecreaser, 50);
+        setCountdownActivity(true);
       } else {
         clearInterval(ticker);
         ticker = null;
-        setActivity(false);
+        setCountdownActivity(false);
       }        
         function secondDecreaser() {
-          setSessionSeconds(previousSecs => previousSecs - 1)
+          setLeftSeconds(previousSecs => previousSecs - 1)
         }
+  }
+
+    useEffect(() => {
+      if (leftSeconds === 0) {
+        if (isSessionRound) {
+          document.getElementById('beep').play()
+          setPanelLabel("Break");
+          console.log('switched to break countdown')
+          setLeftSeconds(breakSeconds);
+          setSessionRound(false);
+          
+        } else {
+          document.getElementById("beep").play();
+          setPanelLabel("Session");
+          setLeftSeconds(defaultSessionLength * 60);
+          setSessionRound(true);
+          console.log("switched to session countdown");
+        }
+        
       }
-
-  const breakIncrement = () => {
-     breakLength++;
-     document.getElementById(
-       "break-label"
-     ).innerHTML = `Break length: ${breakLength}`;
-  };
-
-   const breakDecrement = () => {
-     breakLength--;
-     document.getElementById(
-       "break-label"
-     ).innerHTML = `Break length: ${breakLength}`;
-   };
+    }, [leftSeconds]
+    )
  
   function reset() {
+    document.getElementById("beep").pause();
+    document.getElementById("beep").currentTime = 0;
+    setPanelLabel("Session");
     clearInterval(ticker);
     ticker = null;
     defaultSessionLength = 25;
-    breakLength = 5;
-    console.log(defaultSessionLength * 60);
-    setActivity(false)
-    setSessionSeconds(defaultSessionLength * 60);
+    defaultBreakLength = 5;
+    setCountdownActivity(false)
+    setLeftSeconds(defaultSessionLength * 60);
+    setSessionRound(true);
+   document.getElementById("break-length").innerHTML = 5;
+    
   }
 
   return (
     <>
-      <div id="break-label">Break label: {breakLength}</div>
+      <div id="break-label">
+        Break label: <span id="break-length">5</span>
+      </div>
       <div id="session-label">
-        Session length: <span id="session-length">{defaultSessionLength}</span> 
+        Session length: <span id="session-length">{defaultSessionLength}</span>
       </div>
       <button id="break-decrement" onClick={() => breakDecrement()}>
         Decrease break time
@@ -97,16 +134,17 @@ function Timer() {
       <button id="session-increment" onClick={() => sessionIncrement()}>
         Increase session time
       </button>
-      <div id="break-length">5</div>
-
-      <div id="timer-label">Session</div>
-      <div id="time-left">{clockStyle()}</div>
-      <button id="start_stop" onClick={timerStarter}>
+      <section id="session-timer-panel">
+        <div id="timer-label">{panelLabel}</div>
+        <div id="time-left">{clockStyle()}</div>
+      </section>
+      <button id="start_stop" onClick={timerToggle}>
         Start / Pause
       </button>
       <button id="reset" onClick={reset}>
         Reset
       </button>
+      <audio id='beep' src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav" />
     </>
   );
 }
