@@ -116,7 +116,7 @@ function Timer() {
 
   return (
     <>
-      <div className="container mt-3 mb-5 ms-auto me-auto p-2">
+      <div className="container mb-5 ms-auto me-auto p-2">
         <div
           id="break-label"
           className="row timer-text justify-content-center p-2"
@@ -208,7 +208,7 @@ function Timer() {
           src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav"
         />
       </div>
-      <footer id="copyright" className='m-3'>
+      <footer id="copyright" className='ms-auto me-auto'>
         Designed and Coded By
         <br />
         <a href="https://azotamiota.github.io">azotamiota</a>
