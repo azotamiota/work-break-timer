@@ -1,3 +1,36 @@
 body {
-  background-color: blue;
+  background-image: url('./images/hourglass.jpg');
+  background-repeat: no-repeat;
+  background-size:cover;
+  background-position: center;
+}
+.container {
+  max-width: 50vw;
+  /* border: 5px solid white; */
+  background-color:rgba(255, 255, 255, 0.7);
+  border-radius: 10px;
+}
+
+#break-label {
+  /* border: 1px solid black; */
+}
+#break-length {
+  /* border: 1px solid black; */
+}
+#session-timer-panel {
+  border: 1px solid black;
+}
+.btn{
+    color: #fff;
+    background: linear-gradient(140deg, #a39df1, #1e0bcc);
+    /* font-family: 'Comfortaa', cursive;
+    font-size: 22px;
+    font-weight: 700; */
+    /* text-transform: lowercase;
+    padding: 10px 20px;
+    border: none; */
+    border-radius: 15px;
+    /* overflow: hidden; */
+    /* position: relative; */
+    /* transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1); */
 }
