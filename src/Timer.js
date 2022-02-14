@@ -134,7 +134,7 @@ function Timer() {
           </button>
           <div
             id="break-length"
-            className="bg-light col-2 timer-text d-flex justify-content-center align-items-center"
+            className="bg-light col-2 timer-text d-flex justify-content-center align-items-center lengths"
           >
             5
           </div>
@@ -164,7 +164,7 @@ function Timer() {
           </button>
           <div
             id="session-length"
-            className="bg-light col-2 timer-text d-flex justify-content-center align-items-center"
+            className="bg-light col-2 timer-text d-flex justify-content-center align-items-center lengths"
           >
             {defaultSessionLength}
           </div>

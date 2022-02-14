@@ -14,13 +14,11 @@ body {
   width: 90vw;
   max-width: 768px;
   margin-top: 20px;
-  /* border: 5px solid white; */
   background-color:rgba(255, 255, 255, 0.7);
   border-radius: 10px;
 }
-
-#break-label {
-  /* border: 1px solid black; */
+.lengths {
+  border-radius: 5px;
 }
 
 #session-timer-panel {
@@ -36,17 +34,9 @@ body {
 .btn{
     color: #fff;
     background: linear-gradient(140deg, #f1cf9d, #724605);
-    /* font-family: 'Comfortaa', cursive;
-    font-size: 22px;
-    font-weight: 700; */
-    /* text-transform: lowercase;
-    padding: 10px 20px;
-    border: none; */
     border-radius: 15px;
-    /* overflow: hidden; */
-    /* position: relative; */
-    /* transition: all 0.3s cubic-bezier(0.02, 0.01, 0.47, 1); */
 }
+
 footer {
   max-width: 425px;
   font-family: monospace;
