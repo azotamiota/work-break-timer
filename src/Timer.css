@@ -7,15 +7,22 @@ body {
   background-size: cover;
   background-position: center;
 }
+
 .timer-text {
   font-family: 'Orbitron', sans-serif;
 }
+
 .container, footer{
   width: 90vw;
   max-width: 768px;
   margin-top: 20px;
   background-color:rgba(255, 255, 255, 0.7);
   border-radius: 10px;
+}
+.btn{
+    color: #fff;
+    background: linear-gradient(140deg, #f1cf9d, #724605);
+    border-radius: 15px;
 }
 .lengths {
   border-radius: 5px;
@@ -30,11 +37,6 @@ body {
 #time-left {
   font-size: 30px;
   font-weight: 800;
-}
-.btn{
-    color: #fff;
-    background: linear-gradient(140deg, #f1cf9d, #724605);
-    border-radius: 15px;
 }
 
 footer {

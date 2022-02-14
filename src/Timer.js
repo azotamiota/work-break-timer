@@ -24,9 +24,7 @@ function Timer() {
           ? (displaySeconds = "0" + displaySeconds)
           : displaySeconds;
       return displayMinutes + ":" + displaySeconds;
-    
   }
-  
   
   const sessionIncrement = () => {
       if (isCountdownActive === false) {
@@ -45,6 +43,7 @@ function Timer() {
         }
       }
     };
+
     const breakIncrement = () => {
         if (isCountdownActive === false) {
           if (defaultBreakLength < 60) {
@@ -54,6 +53,7 @@ function Timer() {
           }
         }
     };
+
      const breakDecrement = () => {
        if (isCountdownActive === false) {
          if (defaultBreakLength > 1) {
@@ -64,7 +64,7 @@ function Timer() {
        }
      };
     
-  function timerToggle() {
+  const timerToggle = () => {
       if (isCountdownActive === false) {
         ticker = setInterval(secondDecreaser, 1000);
         setCountdownActivity(true);
@@ -99,7 +99,7 @@ function Timer() {
     }, [leftSeconds]
     )
  
-  function reset() {
+  const reset = () => {
     document.getElementById("beep").pause();
     document.getElementById("beep").currentTime = 0;
     setPanelLabel("Session");
