@@ -4,7 +4,7 @@ import './Timer.css';
 
 let ticker;
 function Timer() {
-  console.log('render happened')
+  // console.log('render happened')
   const defaultSessionLength = useRef(25);
   const defaultBreakLength = useRef(5);
   const [panelLabel, setPanelLabel] = useState('Session')
@@ -42,9 +42,7 @@ function Timer() {
       if (isCountdownActive === false) {
         if (sessionSeconds > 60) {
           defaultSessionLength.current -= 1;
-          console.log("defaultSessionLength: ", defaultSessionLength.current);
-          console.log("sessionSeconds should increment here: ", sessionSeconds);     
-          setLeftSeconds(sessionSeconds - 60);
+         setLeftSeconds(sessionSeconds - 60);
         }
       }
     };
@@ -53,7 +51,6 @@ function Timer() {
         if (isCountdownActive === false) {
           if (defaultBreakLength.current < 60) {
             defaultBreakLength.current += 1;
-            console.log("defaultBreakLength: ", defaultBreakLength.current);
             setValue((justToForceRender) => justToForceRender + 1);
           }
         }
@@ -70,7 +67,7 @@ function Timer() {
     
   const timerToggle = () => {
       if (isCountdownActive === false) {
-        ticker = setInterval(secondDecreaser, 10);
+        ticker = setInterval(secondDecreaser, 1000);
         setCountdownActivity(true);
       } else {
         clearInterval(ticker);
@@ -87,7 +84,6 @@ function Timer() {
         if (isSessionRound) {
           document.getElementById('beep').play()
           setPanelLabel("Break");
-          console.log('switched to break countdown')
           setLeftSeconds(breakSeconds);
           setSessionRound(false);
           
@@ -96,11 +92,10 @@ function Timer() {
           setPanelLabel("Session");
           setLeftSeconds(defaultSessionLength.current * 60);
           setSessionRound(true);
-          console.log("switched to session countdown");
         }
         
       }
-    }, [leftSeconds]
+    }, [leftSeconds, isSessionRound, breakSeconds]
     )
  
   const reset = () => {
