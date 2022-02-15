@@ -1,16 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './Timer.css';
 
-let defaultSessionLength = 25;
-let defaultBreakLength = 5;
+
 let ticker;
 function Timer() {
+  console.log('render happened')
+  const defaultSessionLength = useRef(25);
+  const defaultBreakLength = useRef(5);
   const [panelLabel, setPanelLabel] = useState('Session')
-  const sessionSeconds = defaultSessionLength * 60;
-  const breakSeconds = defaultBreakLength * 60
+  const sessionSeconds = defaultSessionLength.current * 60;
+  const breakSeconds = defaultBreakLength.current * 60
   const [isSessionRound, setSessionRound] = useState(true)
   const [isCountdownActive, setCountdownActivity] = useState(false);
   const [leftSeconds, setLeftSeconds] = useState(sessionSeconds);
+  const [value, setValue] = useState(0);
 
   let clockStyle = () => {
       let displayMinutes = Math.floor(leftSeconds / 60);
@@ -29,7 +32,9 @@ function Timer() {
   const sessionIncrement = () => {
       if (isCountdownActive === false) {
         if (sessionSeconds < 3600) {
-          defaultSessionLength++;
+          defaultSessionLength.current += 1;
+          console.log('defaultSessionLength: ', defaultSessionLength.current)
+          console.log('sessionSeconds should increment here: ', sessionSeconds)
           setLeftSeconds(sessionSeconds + 60);
         }
         }
@@ -38,7 +43,9 @@ function Timer() {
     const sessionDecrement = () => {
       if (isCountdownActive === false) {
         if (sessionSeconds > 60) {
-          defaultSessionLength--;       
+          defaultSessionLength.current -= 1;
+          console.log("defaultSessionLength: ", defaultSessionLength.current);
+          console.log("sessionSeconds should increment here: ", sessionSeconds);     
           setLeftSeconds(sessionSeconds - 60);
         }
       }
@@ -46,20 +53,19 @@ function Timer() {
 
     const breakIncrement = () => {
         if (isCountdownActive === false) {
-          if (defaultBreakLength < 60) {
-            defaultBreakLength++;
-            document.getElementById("break-length").innerHTML =
-              defaultBreakLength;
+          if (defaultBreakLength.current < 60) {
+            defaultBreakLength.current += 1;
+            console.log("defaultBreakLength: ", defaultBreakLength.current);
+            setValue((justToForceRender) => justToForceRender + 1);
           }
         }
     };
 
      const breakDecrement = () => {
        if (isCountdownActive === false) {
-         if (defaultBreakLength > 1) {
-          defaultBreakLength--;
-          document.getElementById("break-length").innerHTML =
-            defaultBreakLength;
+         if (defaultBreakLength.current > 1) {
+          defaultBreakLength.current -= 1;
+          setValue(justToForceRender => justToForceRender - 1);
          }
        }
      };
@@ -90,7 +96,7 @@ function Timer() {
         } else {
           document.getElementById("beep").play();
           setPanelLabel("Session");
-          setLeftSeconds(defaultSessionLength * 60);
+          setLeftSeconds(defaultSessionLength.current * 60);
           setSessionRound(true);
           console.log("switched to session countdown");
         }
@@ -105,10 +111,10 @@ function Timer() {
     setPanelLabel("Session");
     clearInterval(ticker);
     ticker = null;
-    defaultSessionLength = 25;
-    defaultBreakLength = 5;
+    defaultSessionLength.current = 25;
+    defaultBreakLength.current = 5;
     setCountdownActivity(false)
-    setLeftSeconds(defaultSessionLength * 60);
+    setLeftSeconds(defaultSessionLength.current * 60);
     setSessionRound(true);
    document.getElementById("break-length").innerHTML = 5;
     
@@ -136,7 +142,7 @@ function Timer() {
             id="break-length"
             className="bg-light col-2 timer-text d-flex justify-content-center align-items-center lengths"
           >
-            5
+            {defaultBreakLength.current}
           </div>
           <button
             type="button"
@@ -166,7 +172,7 @@ function Timer() {
             id="session-length"
             className="bg-light col-2 timer-text d-flex justify-content-center align-items-center lengths"
           >
-            {defaultSessionLength}
+            {defaultSessionLength.current}
           </div>
           <button
             type="button"
