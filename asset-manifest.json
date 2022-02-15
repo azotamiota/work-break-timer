@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/work-break-timer/static/css/main.432cf1fd.css",
-    "main.js": "/work-break-timer/static/js/main.080c044e.js",
+    "main.js": "/work-break-timer/static/js/main.5e711adf.js",
     "static/media/hourglass.jpg": "/work-break-timer/static/media/hourglass.fccea7078c2de29d2e92.jpg",
     "index.html": "/work-break-timer/index.html",
     "main.432cf1fd.css.map": "/work-break-timer/static/css/main.432cf1fd.css.map",
-    "main.080c044e.js.map": "/work-break-timer/static/js/main.080c044e.js.map"
+    "main.5e711adf.js.map": "/work-break-timer/static/js/main.5e711adf.js.map"
   },
   "entrypoints": [
     "static/css/main.432cf1fd.css",
-    "static/js/main.080c044e.js"
+    "static/js/main.5e711adf.js"
   ]
 }
