@@ -31,7 +31,7 @@ function Timer() {
   }
   
   const sessionIncrement = () => {
-      if (isCountdownActive === false) {
+      if (!isCountdownActive) {
         if (sessionSeconds < 3600) {
           defaultSessionLength.current += 1;
           setLeftSeconds(sessionSeconds + 60);
@@ -40,7 +40,7 @@ function Timer() {
     };
   
     const sessionDecrement = () => {
-      if (isCountdownActive === false) {
+      if (!isCountdownActive) {
         if (sessionSeconds > 60) {
           defaultSessionLength.current -= 1;
          setLeftSeconds(sessionSeconds - 60);
@@ -49,7 +49,7 @@ function Timer() {
     };
 
     const breakIncrement = () => {
-        if (isCountdownActive === false) {
+        if (!isCountdownActive) {
           if (defaultBreakLength.current < 60) {
             defaultBreakLength.current += 1;
             setValue((justToForceRender) => justToForceRender + 1);
@@ -58,7 +58,7 @@ function Timer() {
     };
 
      const breakDecrement = () => {
-       if (isCountdownActive === false) {
+       if (!isCountdownActive) {
          if (defaultBreakLength.current > 1) {
           defaultBreakLength.current -= 1;
           setValue(justToForceRender => justToForceRender - 1);
@@ -67,13 +67,13 @@ function Timer() {
      };
     
   const timerToggle = () => {
-      if (isCountdownActive === false) {
+      if (!isCountdownActive) {
         ticker.current = setInterval(secondDecreaser, 1000);
-        setCountdownActivity(true);
+        setCountdownActivity(!isCountdownActive);
       } else {
         clearInterval(ticker.current);
         ticker.current = null;
-        setCountdownActivity(false);
+        setCountdownActivity(!isCountdownActive);
       }        
         function secondDecreaser() {
           setLeftSeconds(previousSecs => previousSecs - 1)
@@ -123,28 +123,26 @@ function Timer() {
           Break length
         </div>
         <div className="row justify-content-evenly">
-          <button
-            type="button"
-            className="btn btn-secondary col-2"
+          <div
+            className="col-2 but d-flex justify-content-center align-items-center col-2"
             id="break-decrement"
             onClick={() => breakDecrement()}
           >
             <i className="fas fa-chevron-down"></i>
-          </button>
+          </div>
           <div
             id="break-length"
             className="bg-light col-2 timer-text d-flex justify-content-center align-items-center lengths"
           >
             {defaultBreakLength.current}
           </div>
-          <button
-            type="button"
-            className="btn btn-secondary col-2"
+          <div
+            className="col-2 but d-flex justify-content-center align-items-center"
             id="break-increment"
             onClick={() => breakIncrement()}
           >
             <i className="fas fa-chevron-up"></i>
-          </button>
+          </div>
         </div>
         <div className="row justify-content-evenly mt-4">
           <div
@@ -153,28 +151,26 @@ function Timer() {
           >
             Session length
           </div>
-          <button
-            type="button"
-            className="btn btn-secondary col-2"
+          <div
+            className="col-2 but d-flex justify-content-center align-items-center col-2"
             id="session-decrement"
             onClick={() => sessionDecrement()}
           >
             <i className="fas fa-chevron-down"></i>
-          </button>
+          </div>
           <div
             id="session-length"
             className="bg-light col-2 timer-text d-flex justify-content-center align-items-center lengths"
           >
             {defaultSessionLength.current}
           </div>
-          <button
-            type="button"
-            className="btn btn-secondary col-2"
+          <div
+            className="col-2 but d-flex justify-content-center align-items-center col-2"
             id="session-increment"
             onClick={() => sessionIncrement()}
           >
             <i className="fas fa-chevron-up"></i>
-          </button>
+          </div>
         </div>
         <section
           id="session-timer-panel"
@@ -184,30 +180,28 @@ function Timer() {
           <ClockStyle />
         </section>
         <div id="navigation" className="row justify-content-center">
-          <button
-            type="button"
-            className="btn btn-secondary col-3 m-1"
+          <div
+            className="col-2 but d-flex justify-content-center align-items-center col-3 m-1"
             id="start_stop"
             onClick={timerToggle}
           >
             <i className="fas fa-play"></i>
             <i className="fas fa-pause"></i>
-          </button>
-          <button
-            type="button"
-            className="btn btn-secondary col-3 m-1"
+          </div>
+          <div
+            className="col-2 but d-flex justify-content-center align-items-center col-3 m-1"
             id="reset"
             onClick={reset}
           >
             <i className="fas fa-repeat"></i>
-          </button>
+          </div>
         </div>
         <audio
           id="beep"
           src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav"
         />
       </div>
-      <footer id="copyright" className='ms-auto me-auto'>
+      <footer id="copyright" className="ms-auto me-auto">
         Designed and Coded By
         <br />
         <a href="https://azotamiota.github.io">azotamiota</a>

@@ -16,13 +16,17 @@ body {
   width: 90vw;
   max-width: 768px;
   margin-top: 20px;
-  background-color:rgba(235, 235, 250, 0.5);
+  background-color:rgba(235, 235, 250, 0.6);
   border-radius: 10px;
 }
-.btn{
+.but{
     color: #fff;
+    height: 50px;
     background: linear-gradient(140deg, #f1cf9d, #724605);
     border-radius: 15px;
+}
+.but:active {
+  background: linear-gradient(140deg, #724605, #f1cf9d);
 }
 .lengths {
   border-radius: 5px;
