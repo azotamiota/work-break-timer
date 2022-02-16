@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react';
 import './Timer.css';
 
 
-let ticker;
 function Timer() {
   // console.log('render happened')
   const defaultSessionLength = useRef(25);
@@ -10,6 +9,7 @@ function Timer() {
   const [panelLabel, setPanelLabel] = useState('Session')
   const sessionSeconds = defaultSessionLength.current * 60;
   const breakSeconds = defaultBreakLength.current * 60
+  const ticker = useRef(null)
   const [isSessionRound, setSessionRound] = useState(true)
   const [isCountdownActive, setCountdownActivity] = useState(false);
   const [leftSeconds, setLeftSeconds] = useState(sessionSeconds);
@@ -26,7 +26,8 @@ function Timer() {
         displaySeconds < 10
           ? (displaySeconds = "0" + displaySeconds)
           : displaySeconds;
-      return displayMinutes + ":" + displaySeconds;
+      return <div id="time-left">{displayMinutes + ":" + displaySeconds}</div>;
+      ;
   }
   
   const sessionIncrement = () => {
@@ -67,11 +68,11 @@ function Timer() {
     
   const timerToggle = () => {
       if (isCountdownActive === false) {
-        ticker = setInterval(secondDecreaser, 1000);
+        ticker.current = setInterval(secondDecreaser, 1000);
         setCountdownActivity(true);
       } else {
-        clearInterval(ticker);
-        ticker = null;
+        clearInterval(ticker.current);
+        ticker.current = null;
         setCountdownActivity(false);
       }        
         function secondDecreaser() {
@@ -102,8 +103,8 @@ function Timer() {
     document.getElementById("beep").pause();
     document.getElementById("beep").currentTime = 0;
     setPanelLabel("Session");
-    clearInterval(ticker);
-    ticker = null;
+    clearInterval(ticker.current);
+    ticker.current = null;
     defaultSessionLength.current = 25;
     defaultBreakLength.current = 5;
     setCountdownActivity(false)
@@ -180,7 +181,7 @@ function Timer() {
           className="row timer-text mt-3 mb-3 ms-auto me-auto p-3 justify-content-center text-center"
         >
           <div id="timer-label">{panelLabel}</div>
-          <div id="time-left">{<ClockStyle />}</div>
+          <ClockStyle />
         </section>
         <div id="navigation" className="row justify-content-center">
           <button
