@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useReducer } from 'react';
+import { useEffect, useRef, useReducer } from 'react';
 import './Timer.css';
 
 
@@ -7,44 +7,38 @@ function Timer() {
   const defaultSessionLength = useRef(25);
   const defaultBreakLength = useRef(5);
   const totalSeconds = useRef(defaultSessionLength.current * 60);
-  //const [panelLabel, setPanelLabel] = useState('Session')
-
   const ticker = useRef(null)
-  // const [isSessionRound, setSessionRound] = useState(true)
-  // const [isCountdownActive, setCountdownActivity] = useState(false);
-  // const [leftSeconds, setLeftSeconds] = useState(sessionSeconds);
-  // const [value, setValue] = useState(0); //this is for forcing render only
+  
+  const initialState = {
+     sessionLength: defaultSessionLength.current,
+     breakLength: defaultBreakLength.current,
+     panelLabel: "Session",
+     isSessionRound: true,
+     isCountdownActive: false,
+     leftSeconds: totalSeconds.current
+   };
+
   function reducer(state, action) {
     if (action.type === "SESSION_INCREASE") {
-      console.log("state: ", state, "action: ", action);
-      console.log('defaultSEssionlength.current type: ', typeof(defaultSessionLength.current));
       defaultSessionLength.current += 1;
-      console.log("state after defaultSessionLength incremented before return: ", state);
-
-      console.log("defaultSEssionlength after: ", defaultSessionLength.current);
-
-
       return { ...state, sessionLength: defaultSessionLength.current };
     }
   
-  
    if (action.type === "SESSION_DECREASE") {
-     console.log("state: ", state, "action: ", action);
      defaultSessionLength.current -= 1;
      return { ...state, sessionLength: defaultSessionLength.current };
-   
-  }
+    }
 
   if (action.type === "BREAK_INCREASE") {
-       defaultBreakLength.current += 1;
+     defaultBreakLength.current += 1;
      return { ...state, breakLength: defaultBreakLength.current };
-  }
+    }
 
   if (action.type === "BREAK_DECREASE") {
     defaultBreakLength.current -= 1;
     return { ...state, breakLength: defaultBreakLength.current };
-  
-}
+  }
+
    if (action.type === "START_PAUSE") {
     if (!state.isCountdownActive) {
       return { ...state, isCountdownActive: true };
@@ -52,23 +46,16 @@ function Timer() {
       return {...state, isCountdownActive: false}
     }
    }
+
    if (action.type === "TICK") {
         return {
           ...state,
           leftSeconds: state.leftSeconds - 1,
           isCountdownActive: true,
-};
+  };
    }
  }
  
- const initialState = {
-    sessionLength: defaultSessionLength.current,
-    breakLength: defaultBreakLength.current,
-    panelLabel: "Session",
-    isSessionRound: true,
-    isCountdownActive: false,
-    leftSeconds: totalSeconds.current
-  };
 
   const [state, dispatch] = useReducer(reducer, initialState);
   console.log("full state: ", state);
@@ -80,6 +67,7 @@ function Timer() {
        }, 1000);
      } else {
        clearInterval(ticker.current);
+       ticker.current = null;
        //return {...state, isCountdownActive: false}
      }
    }, [state.isCountdownActive]);
