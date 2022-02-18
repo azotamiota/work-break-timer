@@ -52,8 +52,22 @@ function Timer() {
           ...state,
           leftSeconds: state.leftSeconds - 1,
           isCountdownActive: true,
-  };
+    };
    }
+
+    if (action.type === "RESET") {
+      defaultBreakLength.current = 5;
+      defaultSessionLength.current = 25;
+        return {
+          sessionLength: defaultSessionLength.current,
+          breakLength: defaultBreakLength.current,
+          panelLabel: "Session",
+          isSessionRound: true,
+          isCountdownActive: false,
+          leftSeconds: totalSeconds.current,
+        };
+      
+    }
  }
  
 
@@ -247,13 +261,13 @@ function Timer() {
             <i className="fas fa-play"></i>
             <i className="fas fa-pause"></i>
           </div>
-          {/* <div
+          <div
             className="col-2 but d-flex justify-content-center align-items-center col-3 m-1"
             id="reset"
-            onClick={reset}
+            onClick={() => dispatch({ type: "RESET" })}
           >
             <i className="fas fa-repeat"></i>
-          </div> */}
+          </div>
         </div>
         <audio
           id="beep"
