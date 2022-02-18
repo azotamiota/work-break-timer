@@ -170,6 +170,7 @@ function Timer() {
             className="col-2 but d-flex justify-content-center align-items-center col-2"
             id="break-decrement"
             onClick={() =>
+              state.isCountdownActive === false &&
               defaultBreakLength.current > 1 &&
               dispatch({ type: "BREAK_DECREASE" })
             }
@@ -186,6 +187,7 @@ function Timer() {
             className="col-2 but d-flex justify-content-center align-items-center"
             id="break-increment"
             onClick={() =>
+              state.isCountdownActive === false &&
               defaultBreakLength.current < 60 &&
               dispatch({ type: "BREAK_INCREASE" })
             }
@@ -204,6 +206,7 @@ function Timer() {
             className="col-2 but d-flex justify-content-center align-items-center col-2"
             id="session-decrement"
             onClick={() =>
+              state.isCountdownActive === false &&
               defaultSessionLength.current > 1 &&
               dispatch({ type: "SESSION_DECREASE" })
             }
@@ -220,6 +223,7 @@ function Timer() {
             className="col-2 but d-flex justify-content-center align-items-center col-2"
             id="session-increment"
             onClick={() =>
+              state.isCountdownActive === false &&
               defaultSessionLength.current < 60 &&
               dispatch({ type: "SESSION_INCREASE" })
             }
@@ -238,8 +242,7 @@ function Timer() {
           <div
             className="col-2 but d-flex justify-content-center align-items-center col-3 m-1"
             id="start_stop"
-            onClick={() => dispatch({ type: "START_PAUSE" })
-            }
+            onClick={() => dispatch({ type: "START_PAUSE" })}
           >
             <i className="fas fa-play"></i>
             <i className="fas fa-pause"></i>
