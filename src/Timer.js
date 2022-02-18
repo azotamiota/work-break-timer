@@ -6,27 +6,31 @@ function Timer() {
   console.log("render happened");
   const defaultSessionLength = useRef(25);
   const defaultBreakLength = useRef(5);
-  const totalSeconds = useRef(defaultSessionLength.current * 60);
   const ticker = useRef(null)
   
   const initialState = {
      sessionLength: defaultSessionLength.current,
      breakLength: defaultBreakLength.current,
      panelLabel: "Session",
-     isSessionRound: true,
      isCountdownActive: false,
-     leftSeconds: totalSeconds.current
+     leftSeconds: defaultSessionLength.current * 60
    };
 
   function reducer(state, action) {
     if (action.type === "SESSION_INCREASE") {
       defaultSessionLength.current += 1;
-      return { ...state, sessionLength: defaultSessionLength.current };
+      return { ...state, 
+        sessionLength: defaultSessionLength.current,
+        leftSeconds: defaultSessionLength.current * 60 };
     }
   
    if (action.type === "SESSION_DECREASE") {
      defaultSessionLength.current -= 1;
-     return { ...state, sessionLength: defaultSessionLength.current };
+     return {
+       ...state,
+       sessionLength: defaultSessionLength.current,
+       leftSeconds: defaultSessionLength.current * 60,
+     };
     }
 
   if (action.type === "BREAK_INCREASE") {
@@ -48,25 +52,43 @@ function Timer() {
    }
 
    if (action.type === "TICK") {
-        return {
-          ...state,
-          leftSeconds: state.leftSeconds - 1,
-          isCountdownActive: true,
-    };
+     if (state.leftSeconds > 0) {
+       return {
+         ...state,
+         leftSeconds: state.leftSeconds - 1,
+      };
+     } else if (state.panelLabel === 'Session') {
+       return {
+         ...state,
+         panelLabel: 'Break',
+         leftSeconds: defaultBreakLength.current * 60
+       };
+     }
+     if (state.leftSeconds > 0 && state.panelLabel === 'Break') {
+       return {
+         ...state,
+         leftSeconds: state.leftSeconds - 1,
+       };
+     } else {
+       return {
+         ...state,
+         panelLabel: 'Session',
+         leftSeconds: defaultSessionLength.current * 60
+       }
+     }
    }
 
     if (action.type === "RESET") {
       defaultBreakLength.current = 5;
       defaultSessionLength.current = 25;
+      clearInterval(ticker.current);
         return {
           sessionLength: defaultSessionLength.current,
           breakLength: defaultBreakLength.current,
           panelLabel: "Session",
-          isSessionRound: true,
           isCountdownActive: false,
-          leftSeconds: totalSeconds.current,
+          leftSeconds: defaultSessionLength.current * 60,
         };
-      
     }
  }
  
@@ -78,11 +100,10 @@ function Timer() {
      if (state.isCountdownActive) {
        ticker.current = setInterval(() => {
          dispatch({ type: "TICK" });
-       }, 1000);
+       }, 100);
      } else {
        clearInterval(ticker.current);
        ticker.current = null;
-       //return {...state, isCountdownActive: false}
      }
    }, [state.isCountdownActive]);
 
@@ -100,75 +121,6 @@ function Timer() {
       return <div id="time-left">{displayMinutes + ":" + displaySeconds}</div>;
       ;
   }
-
-  // const sessionIncrement = () => {
-  //     if (!isCountdownActive) {
-  //       if (sessionSeconds < 3600) {
-  //         defaultSessionLength.current += 1;
-  //         setLeftSeconds(sessionSeconds + 60);
-  //       }
-  //       }
-  //   };
-
-  // const sessionDecrement = () => {
-  //   if (!isCountdownActive) {
-  //     if (sessionSeconds > 60) {
-  //       defaultSessionLength.current -= 1;
-  //      setLeftSeconds(sessionSeconds - 60);
-  //     }
-  //   }
-  // };
-
-  // const breakIncrement = () => {
-  //     if (!isCountdownActive) {
-  //       if (defaultBreakLength.current < 60) {
-  //         defaultBreakLength.current += 1;
-  //         setValue((justToForceRender) => justToForceRender + 1);
-  //       }
-  //     }
-  // };
-
-  //  const breakDecrement = () => {
-  //    if (!isCountdownActive) {
-  //      if (defaultBreakLength.current > 1) {
-  //       defaultBreakLength.current -= 1;
-  //       setValue(justToForceRender => justToForceRender - 1);
-  //      }
-  //    }
-  //  };
-
-  //   useEffect(() => {
-  //     if (leftSeconds === 0) {
-  //       if (isSessionRound) {
-  //         document.getElementById('beep').play()
-  //         setPanelLabel("Break");
-  //         setLeftSeconds(breakSeconds);
-  //         setSessionRound(false);
-
-  //       } else {
-  //         document.getElementById("beep").play();
-  //         setPanelLabel("Session");
-  //         setLeftSeconds(defaultSessionLength.current * 60);
-  //         setSessionRound(true);
-  //       }
-
-  //     }
-  //   }, [leftSeconds, isSessionRound, breakSeconds]
-  //   )
-
-  // const reset = () => {
-  //   document.getElementById("beep").pause();
-  //   document.getElementById("beep").currentTime = 0;
-  //   setPanelLabel("Session");
-  //   clearInterval(ticker.current);
-  //   ticker.current = null;
-  //   defaultSessionLength.current = 25;
-  //   defaultBreakLength.current = 5;
-  //   setCountdownActivity(false)
-  //   setLeftSeconds(defaultSessionLength.current * 60);
-  //   setSessionRound(true);
-
-  // }
 
   return (
     <>
