@@ -7,6 +7,7 @@ function Timer() {
   const defaultSessionLength = useRef(25);
   const defaultBreakLength = useRef(5);
   const ticker = useRef(null)
+  //const audio = new Audio('https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav');
   
   const initialState = {
      sessionLength: defaultSessionLength.current,
@@ -58,6 +59,7 @@ function Timer() {
          leftSeconds: state.leftSeconds - 1,
       };
      } else if (state.panelLabel === 'Session') {
+       document.getElementById('beep').play();
        return {
          ...state,
          panelLabel: 'Break',
@@ -70,6 +72,7 @@ function Timer() {
          leftSeconds: state.leftSeconds - 1,
        };
      } else {
+       document.getElementById("beep").play();
        return {
          ...state,
          panelLabel: 'Session',
@@ -79,6 +82,8 @@ function Timer() {
    }
 
     if (action.type === "RESET") {
+      document.getElementById("beep").pause();
+      document.getElementById('beep').currentTime = 0;
       defaultBreakLength.current = 5;
       defaultSessionLength.current = 25;
       clearInterval(ticker.current);
