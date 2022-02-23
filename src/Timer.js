@@ -99,7 +99,6 @@ const [state, dispatch] = useReducer(reducer, initialState);
     }
  }
 
-
    useEffect(() => {
      if (state.isCountdownActive) {
        ticker.current = setInterval(() => {
