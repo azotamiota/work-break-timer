@@ -17,7 +17,9 @@ const [state, dispatch] = useReducer(reducer, initialState);
 // console.log('full state: ', state); // for debugging purposes
 
   function reducer(state, action) {
-    if (action.type === "SESSION_INCREASE") {
+    switch (action.type) {
+
+      case "SESSION_INCREASE":
       return {
         ...state,
         sessionLength: state.sessionLength + 1,
@@ -26,10 +28,8 @@ const [state, dispatch] = useReducer(reducer, initialState);
             ? state.leftSeconds + 60
             : state.leftSeconds + 60 + (60 - (state.leftSeconds % 60)),
       };
-    }
-  
-    if (action.type === "SESSION_DECREASE") {
-     return {
+      case "SESSION_DECREASE": 
+      return {
        ...state,
        sessionLength: state.sessionLength - 1,
        leftSeconds:
@@ -37,67 +37,61 @@ const [state, dispatch] = useReducer(reducer, initialState);
            ? state.leftSeconds - 60
            : state.leftSeconds - (state.leftSeconds % 60),
      };
-    }
+      case "BREAK_INCREASE": 
+        return { ...state, breakLength: state.breakLength + 1 };
+    
+      case "BREAK_DECREASE": 
+        return { ...state, breakLength: state.breakLength - 1 };
 
-    if (action.type === "BREAK_INCREASE") {
-     return { ...state, breakLength: state.breakLength + 1 };
-    }
+      case "START_PAUSE":
+        if (!state.isCountdownActive) {
+          return { ...state, isCountdownActive: true };
+        } else {
+          return {...state, isCountdownActive: false}
+        }
 
-    if (action.type === "BREAK_DECREASE") {
-         return { ...state, breakLength: state.breakLength - 1 };
-
+      case "TICK": 
+        if (state.leftSeconds > 0) {
+          return {
+            ...state,
+            leftSeconds: state.leftSeconds - 1,
+          };
+        } else if (state.panelLabel === 'Session') {
+          document.getElementById('beep').play();
+          return {
+            ...state,
+            panelLabel: 'Break',
+            leftSeconds: state.breakLength * 60
+          };
+        }
+        if (state.leftSeconds > 0 && state.panelLabel === 'Break') {
+          return {
+            ...state,
+            leftSeconds: state.leftSeconds - 1,
+          };
+        } else {
+          document.getElementById("beep").play();
+          return {
+            ...state,
+            panelLabel: 'Session',
+            leftSeconds: state.sessionLength * 60
+          }
+          }
+          case "RESET": 
+            document.getElementById("beep").pause();
+            document.getElementById('beep').currentTime = 0;
+            clearInterval(ticker.current);
+              return {
+                sessionLength: 25,
+                breakLength: 5,
+                panelLabel: "Session",
+                isCountdownActive: false,
+                leftSeconds: 1500,
+              }
+          default: 
+              break;
     }
-
-    if (action.type === "START_PAUSE") {
-     if (!state.isCountdownActive) {
-      return { ...state, isCountdownActive: true };
-     } else {
-      return {...state, isCountdownActive: false}
-     }
-    }
-
-    if (action.type === "TICK") {
-     if (state.leftSeconds > 0) {
-       return {
-         ...state,
-         leftSeconds: state.leftSeconds - 1,
-      };
-     } else if (state.panelLabel === 'Session') {
-       document.getElementById('beep').play();
-       return {
-         ...state,
-         panelLabel: 'Break',
-         leftSeconds: state.breakLength * 60
-       };
-     }
-     if (state.leftSeconds > 0 && state.panelLabel === 'Break') {
-       return {
-         ...state,
-         leftSeconds: state.leftSeconds - 1,
-       };
-     } else {
-       document.getElementById("beep").play();
-       return {
-         ...state,
-         panelLabel: 'Session',
-         leftSeconds: state.sessionLength * 60
-       }
-      }
-    }
-
-    if (action.type === "RESET") {
-      document.getElementById("beep").pause();
-      document.getElementById('beep').currentTime = 0;
-      clearInterval(ticker.current);
-        return {
-          sessionLength: 25,
-          breakLength: 5,
-          panelLabel: "Session",
-          isCountdownActive: false,
-          leftSeconds: 1500,
-        };
-    }
- }
+  }
 
    useEffect(() => {
      if (state.isCountdownActive) {
