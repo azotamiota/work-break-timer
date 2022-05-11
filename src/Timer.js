@@ -14,7 +14,7 @@ function Timer() {
    };
 
 const [state, dispatch] = useReducer(reducer, initialState);
-// console.log('full state: ', state); // for debugging purposes
+// console.log('full state: ', state); // uncomment for debugging purposes
 
   function reducer(state, action) {
     switch (action.type) {
